@@ -1,357 +1,425 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bonemade Skin Analytics</title>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        :root {
-            --primary-color: #37b99c;
-            --secondary-color: #e06153;
-            --tertiary-color: #916fdf;
-            --background-color: #f9f9f9;
-            --card-background: #ffffff;
-            --text-primary: #333333;
-            --text-secondary: #666666;
-            --border-radius: 8px;
-            --box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bonemade Skin Analytics</title>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --primary-color: #37b99c;
+      --secondary-color: #e06153;
+      --tertiary-color: #916fdf;
+      --background-color: #f9f9f9;
+      --card-background: #ffffff;
+      --text-primary: #333333;
+      --text-secondary: #666666;
+      --border-radius: 8px;
+      --box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
 
-        body {
-            font-family: 'Open Sans', sans-serif;
-            margin: 0;
-            padding: 20px;
-            background: var(--background-color);
-            color: var(--text-primary);
-        }
+    body {
+      font-family: 'Open Sans', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: var(--background-color);
+      color: var(--text-primary);
+    }
 
-        .dashboard-container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+    .dashboard-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
 
-        .dashboard-header {
-            margin-bottom: 30px;
-            padding: 20px;
-            background: var(--card-background);
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-        }
+    .dashboard-header {
+      margin-bottom: 30px;
+      padding: 20px;
+      background: var(--card-background);
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+    }
 
-        .dashboard-header h1 {
-            margin: 0;
-            color: var(--text-primary);
-        }
+    .dashboard-header h1 {
+      margin: 0;
+      color: var(--text-primary);
+    }
 
-        .date-range {
-            color: var(--text-secondary);
-            font-size: 14px;
-            margin-top: 10px;
-        }
+    .date-range {
+      color: var(--text-secondary);
+      font-size: 14px;
+      margin-top: 10px;
+    }
 
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
 
-        .metric-card {
-            background: var(--card-background);
-            border-radius: var(--border-radius);
-            padding: 20px;
-            text-align: center;
-            box-shadow: var(--box-shadow);
-        }
+    .metric-card {
+      background: var(--card-background);
+      border-radius: var(--border-radius);
+      padding: 20px;
+      text-align: center;
+      box-shadow: var(--box-shadow);
+    }
 
-        .metric-value {
-            font-size: 28px;
-            font-weight: 600;
-            color: var(--primary-color);
-            margin-bottom: 10px;
-        }
+    .metric-value {
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--primary-color);
+      margin-bottom: 10px;
+    }
 
-        .metric-label {
-            font-size: 14px;
-            color: var(--text-secondary);
-            margin-bottom: 15px;
-        }
+    .metric-label {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 15px;
+    }
 
-        .trend {
-            font-size: 14px;
-            padding: 5px 10px;
-            border-radius: 4px;
-            display: inline-block;
-            margin: 5px;
-        }
+    .trend {
+      font-size: 14px;
+      padding: 5px 10px;
+      border-radius: 4px;
+      display: inline-block;
+      margin: 5px;
+    }
 
-        .trend.positive {
-            background: rgba(55, 185, 156, 0.1);
-            color: var(--primary-color);
-        }
+    .trend.positive {
+      background: rgba(55, 185, 156, 0.1);
+      color: var(--primary-color);
+    }
 
-        .trend.negative {
-            background: rgba(224, 97, 83, 0.1);
-            color: var(--secondary-color);
-        }
+    .trend.negative {
+      background: rgba(224, 97, 83, 0.1);
+      color: var(--secondary-color);
+    }
 
-        .widget {
-            background: var(--card-background);
-            border-radius: var(--border-radius);
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: var(--box-shadow);
-        }
+    .widget {
+      background: var(--card-background);
+      border-radius: var(--border-radius);
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: var(--box-shadow);
+    }
 
-        .widget h2 {
-            margin-top: 0;
-            margin-bottom: 20px;
-            color: var(--text-primary);
-        }
+    .widget h2 {
+      margin-top: 0;
+      margin-bottom: 20px;
+      color: var(--text-primary);
+    }
 
-        .chart-container {
-            position: relative;
-            height: 300px;
-            margin: 20px 0;
-        }
+    .chart-container {
+      position: relative;
+      height: 300px;
+      margin: 20px 0;
+    }
 
-        @media (max-width: 768px) {
-            .metrics-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .chart-container {
-                height: 250px;
-            }
+    /* Calendar styles */
+    .calendar-day {
+      background: var(--card-background);
+      border-radius: var(--border-radius);
+      padding: 15px;
+      margin-bottom: 15px;
+      box-shadow: var(--box-shadow);
+    }
+    .calendar-day .day-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .calendar-day .day-date {
+      font-weight: 600;
+      color: var(--primary-color);
+    }
+    .calendar-day .day-day {
+      font-weight: 600;
+      color: var(--secondary-color);
+    }
 
-            body {
-                padding: 10px;
-            }
-        }
+    @media (max-width: 768px) {
+      .metrics-grid {
+        grid-template-columns: 1fr;
+      }
 
-        @media print {
-            body {
-                background: white;
-            }
-            .widget {
-                break-inside: avoid;
-            }
-            .chart-container {
-                break-inside: avoid;
-            }
-        }
-    </style>
+      .chart-container {
+        height: 250px;
+      }
+
+      body {
+        padding: 10px;
+      }
+    }
+
+    @media print {
+      body {
+        background: white;
+      }
+      .widget {
+        break-inside: avoid;
+      }
+      .chart-container {
+        break-inside: avoid;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="dashboard-container">
-        <div class="dashboard-header">
-            <h1>Bonemade Skin Analytics</h1>
-            <div class="date-range">January 1, 2025 - March 31, 2025</div>
-        </div>
-
-        <div class="metrics-grid">
-            <div class="metric-card">
-                <div class="metric-value">4,046</div>
-                <div class="metric-label">Total Sessions</div>
-                <div class="trend positive">+1% vs Previous Period</div>
-                <div class="trend positive">+100% vs Previous Year</div>
-            </div>
-            <div class="metric-card">
-                <div class="metric-value">3,156</div>
-                <div class="metric-label">New Users</div>
-                <div class="trend negative">-7% vs Previous Period</div>
-                <div class="trend positive">+100% vs Previous Year</div>
-            </div>
-            <div class="metric-card">
-                <div class="metric-value">55.22%</div>
-                <div class="metric-label">Bounce Rate</div>
-                <div class="trend positive">-12% vs Previous Period</div>
-                <div class="trend negative">+100% vs Previous Year</div>
-            </div>
-            <div class="metric-card">
-                <div class="metric-value">44.78%</div>
-                <div class="metric-label">Engagement Rate</div>
-                <div class="trend positive">+21% vs Previous Period</div>
-                <div class="trend positive">+100% vs Previous Year</div>
-            </div>
-        </div>
-
-        <div class="widget">
-            <h2>Traffic by Channel</h2>
-            <div class="chart-container">
-                <canvas id="channelChart"></canvas>
-            </div>
-        </div>
-
-        <div class="widget">
-            <h2>Session Trends</h2>
-            <div class="chart-container">
-                <canvas id="sessionTrendChart"></canvas>
-            </div>
-        </div>
-
-        <div class="widget">
-            <h2>Search Performance</h2>
-            <div class="metrics-grid">
-                <div class="metric-card">
-                    <div class="metric-value">294,100</div>
-                    <div class="metric-label">Impressions</div>
-                    <div class="trend positive">+68% vs Previous Period</div>
-                    <div class="trend positive">+100% vs Previous Year</div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-value">1,625</div>
-                    <div class="metric-label">Clicks</div>
-                    <div class="trend positive">+102% vs Previous Period</div>
-                    <div class="trend positive">+100% vs Previous Year</div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-value">43.33%</div>
-                    <div class="metric-label">Search Impression Share</div>
-                    <div class="trend positive">+16% vs Previous Period</div>
-                    <div class="trend positive">+100% vs Previous Year</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="widget">
-            <h2>Engagement Metrics</h2>
-            <div class="chart-container">
-                <canvas id="engagementChart"></canvas>
-            </div>
-        </div>
+  <div class="dashboard-container">
+    <div class="dashboard-header">
+      <h1>Bonemade Skin Analytics</h1>
+      <div class="date-range">January 1, 2025 - March 31, 2025</div>
     </div>
 
-    <script>
-        // Channel Distribution Chart
-        const channelCtx = document.getElementById('channelChart').getContext('2d');
-        new Chart(channelCtx, {
-            type: 'bar',
-            data: {
-                labels: ['Organic Search', 'Cross-network', 'Paid Search', 'Direct', 'Unassigned', 'Organic Social', 'Referral', 'Email'],
-                datasets: [{
-                    label: 'Sessions by Channel',
-                    data: [1211, 783, 584, 312, 39, 21, 0, 0],
-                    backgroundColor: [
-                        '#37b99c',
-                        '#e06153',
-                        '#916fdf',
-                        '#ea8d4e',
-                        '#e0b448',
-                        '#b8c148',
-                        '#2e8dc1',
-                        '#5fa26c'
-                    ]
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'top',
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Number of Sessions'
-                        }
-                    }
-                }
-            }
-        });
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-value">4,046</div>
+        <div class="metric-label">Total Sessions</div>
+        <div class="trend positive">+1% vs Previous Period</div>
+        <div class="trend positive">+100% vs Previous Year</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value">3,156</div>
+        <div class="metric-label">New Users</div>
+        <div class="trend negative">-7% vs Previous Period</div>
+        <div class="trend positive">+100% vs Previous Year</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value">55.22%</div>
+        <div class="metric-label">Bounce Rate</div>
+        <div class="trend positive">-12% vs Previous Period</div>
+        <div class="trend negative">+100% vs Previous Year</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value">44.78%</div>
+        <div class="metric-label">Engagement Rate</div>
+        <div class="trend positive">+21% vs Previous Period</div>
+        <div class="trend positive">+100% vs Previous Year</div>
+      </div>
+    </div>
 
-        // Session Trend Chart
-        const trendCtx = document.getElementById('sessionTrendChart').getContext('2d');
-        new Chart(trendCtx, {
-            type: 'line',
-            data: {
-                labels: ['Jan', 'Feb'],
-                datasets: [{
-                    label: 'Total Sessions',
-                    data: [3138, 947],
-                    borderColor: '#37b99c',
-                    backgroundColor: 'rgba(55, 185, 156, 0.1)',
-                    fill: true,
-                    tension: 0.4
-                }, {
-                    label: 'Engaged Sessions',
-                    data: [1315, 500],
-                    borderColor: '#e06153',
-                    backgroundColor: 'rgba(224, 97, 83, 0.1)',
-                    fill: true,
-                    tension: 0.4
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'top',
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Number of Sessions'
-                        }
-                    }
-                }
-            }
-        });
+    <div class="widget">
+      <h2>Traffic by Channel</h2>
+      <div class="chart-container">
+        <canvas id="channelChart"></canvas>
+      </div>
+    </div>
 
-        // Engagement Chart
-        const engagementCtx = document.getElementById('engagementChart').getContext('2d');
-        new Chart(engagementCtx, {
-            type: 'line',
-            data: {
-                labels: ['Jan', 'Feb'],
-                datasets: [{
-                    label: 'Engagement Rate',
-                    data: [41.91, 52.80],
-                    borderColor: '#37b99c',
-                    backgroundColor: 'rgba(55, 185, 156, 0.1)',
-                    fill: true,
-                    tension: 0.4,
-                    yAxisID: 'y'
-                }, {
-                    label: 'Bounce Rate',
-                    data: [58.09, 47.20],
-                    borderColor: '#e06153',
-                    backgroundColor: 'rgba(224, 97, 83, 0.1)',
-                    fill: true,
-                    tension: 0.4,
-                    yAxisID: 'y'
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'top',
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Percentage (%)'
-                        },
-                        max: 100
-                    }
-                }
+    <div class="widget">
+      <h2>Session Trends</h2>
+      <div class="chart-container">
+        <canvas id="sessionTrendChart"></canvas>
+      </div>
+    </div>
+
+    <div class="widget">
+      <h2>Search Performance</h2>
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-value">294,100</div>
+          <div class="metric-label">Impressions</div>
+          <div class="trend positive">+68% vs Previous Period</div>
+          <div class="trend positive">+100% vs Previous Year</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value">1,625</div>
+          <div class="metric-label">Clicks</div>
+          <div class="trend positive">+102% vs Previous Period</div>
+          <div class="trend positive">+100% vs Previous Year</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value">43.33%</div>
+          <div class="metric-label">Search Impression Share</div>
+          <div class="trend positive">+16% vs Previous Period</div>
+          <div class="trend positive">+100% vs Previous Year</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="widget">
+      <h2>Engagement Metrics</h2>
+      <div class="chart-container">
+        <canvas id="engagementChart"></canvas>
+      </div>
+    </div>
+
+    <!-- New Widget: Social Media Calendar -->
+    <div class="widget">
+      <h2>Social Media Calendar</h2>
+      <div id="calendar-days"></div>
+    </div>
+  </div>
+
+  <script>
+    // Channel Distribution Chart
+    const channelCtx = document.getElementById('channelChart').getContext('2d');
+    new Chart(channelCtx, {
+      type: 'bar',
+      data: {
+        labels: ['Organic Search', 'Cross-network', 'Paid Search', 'Direct', 'Unassigned', 'Organic Social', 'Referral', 'Email'],
+        datasets: [{
+          label: 'Sessions by Channel',
+          data: [1211, 783, 584, 312, 39, 21, 0, 0],
+          backgroundColor: [
+            '#37b99c',
+            '#e06153',
+            '#916fdf',
+            '#ea8d4e',
+            '#e0b448',
+            '#b8c148',
+            '#2e8dc1',
+            '#5fa26c'
+          ]
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'top'
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            title: {
+              display: true,
+              text: 'Number of Sessions'
             }
-        });
-    </script>
+          }
+        }
+      }
+    });
+
+    // Session Trend Chart
+    const trendCtx = document.getElementById('sessionTrendChart').getContext('2d');
+    new Chart(trendCtx, {
+      type: 'line',
+      data: {
+        labels: ['Jan', 'Feb'],
+        datasets: [{
+          label: 'Total Sessions',
+          data: [3138, 947],
+          borderColor: '#37b99c',
+          backgroundColor: 'rgba(55, 185, 156, 0.1)',
+          fill: true,
+          tension: 0.4
+        }, {
+          label: 'Engaged Sessions',
+          data: [1315, 500],
+          borderColor: '#e06153',
+          backgroundColor: 'rgba(224, 97, 83, 0.1)',
+          fill: true,
+          tension: 0.4
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'top'
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            title: {
+              display: true,
+              text: 'Number of Sessions'
+            }
+          }
+        }
+      }
+    });
+
+    // Engagement Chart
+    const engagementCtx = document.getElementById('engagementChart').getContext('2d');
+    new Chart(engagementCtx, {
+      type: 'line',
+      data: {
+        labels: ['Jan', 'Feb'],
+        datasets: [{
+          label: 'Engagement Rate',
+          data: [41.91, 52.80],
+          borderColor: '#37b99c',
+          backgroundColor: 'rgba(55, 185, 156, 0.1)',
+          fill: true,
+          tension: 0.4,
+          yAxisID: 'y'
+        }, {
+          label: 'Bounce Rate',
+          data: [58.09, 47.20],
+          borderColor: '#e06153',
+          backgroundColor: 'rgba(224, 97, 83, 0.1)',
+          fill: true,
+          tension: 0.4,
+          yAxisID: 'y'
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'top'
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            title: {
+              display: true,
+              text: 'Percentage (%)'
+            },
+            max: 100
+          }
+        }
+      }
+    });
+
+    // --- Social Media Content Calendar Data and Rendering ---
+    const socialMediaSchedule = [
+      { id: 1, date: '2025-02-10', day: 'Monday', contentType: 'Quote', postIdea: 'Motivational quote to kickstart the week – “Feed Your Skin with Nature’s Best”', instagramPostType: 'Post with Image' },
+      { id: 2, date: '2025-02-11', day: 'Tuesday', contentType: 'Carousel Post', postIdea: 'Step‑by‑step guide on the benefits of bone marrow tallow for healthy skin.', instagramPostType: 'Carousel Post' },
+      { id: 3, date: '2025-02-12', day: 'Wednesday', contentType: 'Story', postIdea: 'Behind the scenes at our Idaho workshop – how our tallow is made with care.', instagramPostType: 'Story' },
+      { id: 4, date: '2025-02-13', day: 'Thursday', contentType: 'Reel', postIdea: 'Quick demo: “How to Apply Tallow Balm for Maximum Hydration”', instagramPostType: 'Reel' },
+      { id: 5, date: '2025-02-14', day: 'Friday', contentType: 'Post with Image', postIdea: 'Valentine’s special: “Love Your Skin Naturally” – a lifestyle image featuring our product in use.', instagramPostType: 'Post with Image' },
+      { id: 6, date: '2025-02-15', day: 'Saturday', contentType: 'Meme', postIdea: 'Lighthearted skincare meme celebrating natural beauty.', instagramPostType: 'Meme (Post)' },
+      { id: 7, date: '2025-02-16', day: 'Sunday', contentType: 'Testimonial', postIdea: 'Share a glowing customer review on how tallow transformed their skin.', instagramPostType: 'Post with Image' },
+      { id: 8, date: '2025-02-17', day: 'Monday', contentType: 'Carousel Post', postIdea: 'Educational carousel: “Tallow vs. Coconut Oil – What’s Best for Your Skin?”', instagramPostType: 'Carousel Post' },
+      { id: 9, date: '2025-02-18', day: 'Tuesday', contentType: 'Story', postIdea: 'Quick tip about our sourcing ethics and sustainable production methods.', instagramPostType: 'Story' },
+      { id: 10, date: '2025-02-19', day: 'Wednesday', contentType: 'Reel', postIdea: 'Dynamic demonstration reel: “Before & After – Real Results with Tallow Balm”', instagramPostType: 'Reel' }
+    ];
+
+    function renderSocialMediaCalendar() {
+      const calendarContainer = document.getElementById('calendar-days');
+      calendarContainer.innerHTML = "";
+
+      socialMediaSchedule.forEach(item => {
+        const card = document.createElement('div');
+        card.classList.add('calendar-day');
+
+        card.innerHTML = `
+          <div class="day-header">
+            <div class="day-date">${new Date(item.date).toLocaleDateString()}</div>
+            <div class="day-day">${item.day}</div>
+          </div>
+          <div class="day-task"><strong>Content Type:</strong> ${item.contentType}</div>
+          <div class="day-task"><strong>Post Idea:</strong> ${item.postIdea}</div>
+          <div class="day-notes"><strong>Instagram Post:</strong> ${item.instagramPostType}</div>
+        `;
+
+        calendarContainer.appendChild(card);
+      });
+    }
+
+    // Render the Social Media Calendar
+    renderSocialMediaCalendar();
+  </script>
 </body>
 </html>
